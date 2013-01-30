@@ -1,0 +1,7 @@
+base   pubmed
+author Ikuo Obataya
+email  i.obataya[at]gmail_com
+date   2013-01-30
+name   Pubmed plugin
+desc   Creates PubMed info
+url    http://www.dokuwiki.org/plugin:pubmed
