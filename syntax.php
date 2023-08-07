@@ -29,9 +29,9 @@ class syntax_plugin_pubmed extends DokuWiki_Syntax_Plugin {
     if(str_contains($match,':')){
       list($cmd,$pmid) = explode(':',$match);
     }else{
-        $cmd = "short";
-        $pmid = $match;
-    }    
+        $cmd = $match;
+        $pmid = '';
+    }
     return array($state,array($cmd,$pmid));
   }
  /**
@@ -41,7 +41,7 @@ class syntax_plugin_pubmed extends DokuWiki_Syntax_Plugin {
     if ($mode!='xhtml')
       return false;
     list($state, $query) = $data;
-    list($cmd, $pmid)= $query;
+    list($cmd, $pmid) = $query;
     $cmd = strtolower($cmd);
     if ($cmd=='long' || $cmd=='short'){
       if (!is_numeric($pmid)){
