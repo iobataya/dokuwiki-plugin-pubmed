@@ -3,7 +3,7 @@
 description : RCSB utility to access RCSB PDB
 author      : Ikuo Obataya
 email       : ikuo_obataya@symplus.co.jp
-lastupdate  : 2008-03-22
+lastupdate  : 2023-08-07
 license     : GPL 2 (http://www.gnu.org/licenses/gpl.html)
 */
 if(!defined('DOKU_INC')) die();
@@ -12,7 +12,7 @@ class rcsb{
   var $ImgURL;
   var $LinkURL;
   var $LinkFormat;
-  function rcsb()
+  function __construct()
   {
     $this->HttpClient = new DokuHTTPClient();
     $this->ImgURL     = 'http://www.rcsb.org/pdb/images/%s_bio_r_500.jpg';
