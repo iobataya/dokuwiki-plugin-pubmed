@@ -7,13 +7,16 @@ class syntax_plugin_pubmed extends DokuWiki_Syntax_Plugin {
   var $ncbi;
   var $xmlCache;
   // Constructor
-  function syntax_plugin_pubmed(){
+  function __construct(){
     if (!class_exists('plugin_cache'))
       @require_once(DOKU_PLUGIN.'pubmed/classes/cache.php');
     if (!class_exists('rcsb')||!class_exists('ncbi')||!class_exists('xml'))
       @require_once(DOKU_PLUGIN.'pubmed/classes/sciencedb.php');
     $this->ncbi     = new ncbi();
     $this->xmlCache = new plugin_cache("ncbi_esummary","pubmed","xml.gz");
+    
+    if($this->ncbi == Null) print("NCBI is null !");
+    if($this->xmlCache == Null) print("this->xmlCache is null !");
   }
   function getType(){ return 'substition'; }
   function getSort(){ return 158; }
@@ -23,7 +26,13 @@ class syntax_plugin_pubmed extends DokuWiki_Syntax_Plugin {
   */
   function handle($match, $state, $pos, Doku_Handler $handler){
     $match = substr($match,9,-2);
-    return array($state,explode(':',$match));
+    if(str_contains($match,':')){
+      list($cmd,$pmid) = explode(':',$match);
+    }else{
+        $cmd = "short";
+        $pmid = $match;
+    }    
+    return array($state,array($cmd,$pmid));
   }
  /**
   * Create output
@@ -32,9 +41,8 @@ class syntax_plugin_pubmed extends DokuWiki_Syntax_Plugin {
     if ($mode!='xhtml')
       return false;
     list($state, $query) = $data;
-    list($cmd,$pmid)= $query;
+    list($cmd, $pmid)= $query;
     $cmd = strtolower($cmd);
-
     if ($cmd=='long' || $cmd=='short'){
       if (!is_numeric($pmid)){
         $renderer->doc.=sprintf($this->getLang('pubmed_wrong_format'));
@@ -104,12 +112,14 @@ class syntax_plugin_pubmed extends DokuWiki_Syntax_Plugin {
     }
   }
 
-
  /**
   * Get summary XML from cache or NCBI
   */
     function getSummaryXml($pmid){
     global $conf;
+    if($this->xmlCache == Null){
+        print("Null !!");}
+        
     $cachedXml = $this->xmlCache->GetMediaText($pmid);
     if ($cachedXml!==false){ return $cachedXml; }
 
